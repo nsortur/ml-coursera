@@ -62,6 +62,7 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+%Cost calculations
 eye_matrix = eye(num_labels);
 y_matrix = eye_matrix(y,:);
  
@@ -74,14 +75,39 @@ a2 = [ones(1, size(a2,2)) ; a2];
 z3 = Theta2 * a2;
 a3 = sigmoid(z3);
  
-J = (1 / m) * sum(sum(-y_matrix .* log(a3') - ((1-y_matrix) .* log(1-a3'))));
+J = (1 / m) * sum(sum(-y_matrix .* log(a3') - ...
+    ((1-y_matrix) .* log(1-a3'))));
+
+sumThisTheta1 = (Theta1(:,2:end)).^2;
+sumThisTheta2 = (Theta2(:,2:end)).^2;
+
+regularization = (lambda / (2 * m)) * ...
+    (sum(sum(sumThisTheta1)) + sum(sum(sumThisTheta2)));
+
+J = J + regularization;
 
 
+%Gradient calculations
+delta3 = a3 - y_matrix';
 
+preDelta2 = (Theta2(:,2:end))' * delta3;
+delta2 = preDelta2 .* sigmoidGradient(z2);
+DELTA1 = delta2 * a1;
+DELTA2 = delta3 * a2';
 
+Theta1_grad = ((1 / m) * DELTA1);
+Theta2_grad = (1 / m) * DELTA2;
 
+Theta1 = Theta1(:,2:end);
+Theta1 = [zeros(size(Theta1,1),1) Theta1];
+Theta2 = Theta2(:,2:end);
+Theta2 = [zeros(size(Theta2,1),1) Theta2];
 
+regularizationBack1 = (lambda / m) * Theta1;
+regularizationBack2 = (lambda / m) * Theta2;
 
+Theta1_grad = Theta1_grad + regularizationBack1;
+Theta2_grad = Theta2_grad + regularizationBack2;
 % -------------------------------------------------------------
 
 % =========================================================================
