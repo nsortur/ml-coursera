@@ -19,16 +19,20 @@ grad = zeros(size(theta));
 %               You should set J to the cost and grad to the gradient.
 %
 
+%Hypothesis calculations
+maxThis = X * theta;
+hypot = max(maxThis, [] , 2);
 
+%Cost calculation
+J = (1 / (2 * m)) * sum((hypot - y).^2) + ((lambda / ...
+    (2 * m)) * sum(theta (2:end).^2));
 
-
-
-
-
-
-
-
-
+%Gradient calculations
+beforeSumOne = (hypot - y) .* X(:,1);
+beforeSumTwo = (hypot - y) .* X(:,2:end);
+firstGrad = (1 / m) * sum(beforeSumOne);
+otherGrads = ((1 / m) * sum(beforeSumTwo,1)) + (((lambda / m) * theta(2:end))');
+grad = [firstGrad otherGrads];
 
 % =========================================================================
 
