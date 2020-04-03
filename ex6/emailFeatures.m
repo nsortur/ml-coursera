@@ -49,7 +49,10 @@ x = zeros(n, 1);
 %
 
 
-
+for i = 1:length(word_indices)
+    lookup = word_indices(i);
+    x(lookup) = 1;
+end
 
 
 
