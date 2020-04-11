@@ -20,10 +20,12 @@ S = zeros(n);
 %       number of examples).
 %
 
+%Compute covariance matrix
+Sigma = (1 / m) * (X' * X);
 
-
-
-
+%Compute signular value decomposition
+%U-Eigenvectors, S-Eigenvalues
+[U, S, ~] = svd(Sigma);
 
 
 % =========================================================================
